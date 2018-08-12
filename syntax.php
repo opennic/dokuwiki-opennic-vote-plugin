@@ -122,8 +122,8 @@ class syntax_plugin_devote extends DokuWiki_Syntax_Plugin {
 			$renderer->doc .= '<th class="centeralign">' . hsc($choice) . '</th>';
 		}
 		$renderer->doc .= '</tr>';
-		$renderer->doc .= '<tr>';
-		if (true) {
+		if (!$closed && isset($INFO["userinfo"]) && $ACT === "show" && $REV === 0) {
+			$renderer->doc .= '<tr>';
 			$renderer->doc .= '<th class="rightalign"><input type="submit" value="Your vote:" name="devote_cast_vote" class="btn btn-default btn-xs"></th>';
 			foreach ($choices as $choice) {
 				$checked = "";
@@ -132,14 +132,15 @@ class syntax_plugin_devote extends DokuWiki_Syntax_Plugin {
 				}
 				$renderer->doc .= '<td class="centeralign"><input type="radio" name="devote_selection" value="' . hsc($choice) . '"' . $checked . '></td>';
 			}
+			$renderer->doc .= '</tr>';
+		}
+		$renderer->doc .= '<tr>';
+		$renderer->doc .= '<th class="rightalign">Result:</th>';
+		if (!$votetotal) {
+			$renderer->doc  .= '<td class="centeralign" colspan="' . sizeof($choices) . '">No votes</td>';
 		} else {
-			$renderer->doc .= '<th class="rightalign">Result:</th>';
-			if (!$votetotal) {
-				$renderer->doc  .= '<td class="centeralign" colspan="' . sizeof($choices) . '">No votes</td>';
-			} else {
-				foreach ($choices as $choice) {
-					$renderer->doc .= '<td class="centeralign">' . $votestats[$choice] . ' (' . ($votetotal ? round($votestats[$choice] / $votetotal * 100, 1) : 0) . '%)</td>';
-				}
+			foreach ($choices as $choice) {
+				$renderer->doc .= '<td class="centeralign">' . $votestats[$choice] . ' (' . ($votetotal ? round($votestats[$choice] / $votetotal * 100, 1) : 0) . '%)</td>';
 			}
 		}
 		$renderer->doc .= '</tr>';
